@@ -1,6 +1,7 @@
 using BulkyBook.Data.DBContext;
 using BulkyBook.Data.IRepository;
 using BulkyBook.Data.Repository;
+using BulkyBook.Data.UnitOfWork;
 using BulkyBook.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 #region Dependency injection
 
-builder.Services.AddScoped<IRepository<Category>, GenericRepository<Category>>();
+builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
 #endregion
 
 builder.Services.AddControllersWithViews();
@@ -41,7 +42,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

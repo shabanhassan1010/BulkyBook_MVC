@@ -9,6 +9,5 @@ namespace BulkyBook.Data.IRepository
         void Delete(T entity);
         void DeleteRange(IEnumerable<T> entity);
         void Add(T entity);
-        void Save();
     }
 }

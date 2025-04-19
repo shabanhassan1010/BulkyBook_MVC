@@ -7,41 +7,35 @@ namespace BulkyBook.Data.Repository
     public class GenericRepository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDBContext _context;
-        private readonly DbSet<T> _dbSet;
         public GenericRepository(ApplicationDBContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
         }
         public void Add(T entity)
         {
-            _dbSet.Add(entity);
+            _context.Set<T>().Add(entity);
         }
         public void Delete(T entity)
         {
-            _dbSet.Remove(entity);
+            _context.Set<T>().Remove(entity);
         }
 
         public void DeleteRange(IEnumerable<T> entity)
         {
-            _dbSet.RemoveRange(entity);
+            _context.Set<T>().RemoveRange(entity);
         }
 
         public IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _context.Set<T>().ToList();
         }
         public T GetById(int id)
         {
-            return _dbSet.Find(id);
-        }
-        public void Save()
-        {
-            _context.SaveChanges();
+            return _context.Set<T>().Find(id);
         }
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            _context.Set<T>().Update(entity);
         }
     }
 }
