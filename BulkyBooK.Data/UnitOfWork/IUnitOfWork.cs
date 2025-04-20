@@ -10,6 +10,7 @@ namespace BulkyBook.Data.UnitOfWork
     public interface IUnitOfWork
     {
         CategoryRepository Categories { get; }
+        ProductRepository Products { get; }
         void Save();
     }
 }

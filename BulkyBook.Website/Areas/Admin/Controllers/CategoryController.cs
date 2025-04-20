@@ -11,7 +11,6 @@ namespace BulkyBook.Website.Areas.Admin.Controllers
     {
         #region DBContext
         private readonly IUnitOfWork unitOfWork;
-
         public CategoryController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;

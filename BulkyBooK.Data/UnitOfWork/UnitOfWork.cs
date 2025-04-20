@@ -12,12 +12,13 @@ namespace BulkyBook.Data.UnitOfWork
     {
         private readonly ApplicationDBContext context;
         public CategoryRepository Categories { get; private set; }
+        public ProductRepository Products { get; private set; }
         public UnitOfWork(ApplicationDBContext context)
         {
             this.context = context;
             Categories = new CategoryRepository(context);
+            Products = new ProductRepository(context);
         }
-
         public void Save()
         {
             context.SaveChanges();

@@ -1,10 +1,10 @@
-﻿@model List<Category>
+﻿@model List<Product>
 
 <div class="card shadow border-0 my-4">
     <div class="card-header bg-secondary bg-gradient py-3">
         <div class="row">
             <div class="col text-center">
-                <h2 class="text-white mb-0">Category List</h2>
+                <h2 class="text-white mb-0">Product List</h2>
             </div>
         </div>
     </div>
@@ -13,36 +13,42 @@
         <div class="row mb-3">
             <div class="col"></div>
             <div class="col text-end">
-                <a asp-controller="Category" asp-action="Create" class="btn btn-primary btn-sm">
+                <a asp-controller="Product" asp-action="Create" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus-circle"></i> Create New
                 </a>
             </div>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped mb-0">
+            <table id="tblData" class="table table-bordered table-striped mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Category Name</th>
-                        <th>Display Order</th>
+                        <th>Title</th>
+                        <th>ISBN</th>
+                        <th>Price</th>
+                        <th>Author</th>
+                        <th>Category</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var obj in Model.OrderBy(c => c.DisplayOrder))
+                    @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@obj.Name</td>
-                            <td>@obj.DisplayOrder</td>
+                            <td>@item.Title</td>
+                            <td>@item.ISBN</td>
+                            <td>@item.ListPrice @* .ToString("C") *@ </td>
+                            <td>@item.Author</td>
+                            <td>             </td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a asp-action="Update" asp-controller="Category" asp-route-id="@obj.ID"
+                                    <a asp-action="Update" asp-controller="Product" asp-route-id="@item.Id"
                                        class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-pencil-square"></i> Edit
+                                        Update
                                     </a>
-                                    <a asp-action="Delete"  asp-controller="Category"  asp-route-id="@obj.ID"
+                                    <a asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id"
                                        class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-trash-fill"></i> Delete
+                                        Delete
                                     </a>
                                 </div>
                             </td>
@@ -55,5 +61,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/category.js"></script>
+    <script src="~/js/product.js"></script>
 }
