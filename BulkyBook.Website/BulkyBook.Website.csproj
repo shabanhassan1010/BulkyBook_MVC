@@ -16,7 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BulkyBooK.Data\BulkyBook.Data.csproj" />
-    <ProjectReference Include="..\BulkyBook.Models\BulkyBook.Models.csproj" />
+    <ProjectReference Include="..\BulkyBook.Model\BulkyBook.Model.csproj" />
+    <ProjectReference Include="..\BulkyBook.Model\BulkyBook.Model.csproj" />
     <ProjectReference Include="..\BulkyBook.Utility\BulkyBook.Utility.csproj" />
   </ItemGroup>
 

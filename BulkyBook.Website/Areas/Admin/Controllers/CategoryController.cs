@@ -1,7 +1,7 @@
 ﻿using BulkyBook.Data.DBContext;
 using BulkyBook.Data.IRepository;
 using BulkyBook.Data.UnitOfWork;
-using BulkyBook.Models;
+using BulkyBook.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBook.Website.Areas.Admin.Controllers

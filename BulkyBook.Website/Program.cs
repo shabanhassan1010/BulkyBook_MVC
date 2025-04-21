@@ -2,7 +2,7 @@ using BulkyBook.Data.DBContext;
 using BulkyBook.Data.IRepository;
 using BulkyBook.Data.Repository;
 using BulkyBook.Data.UnitOfWork;
-using BulkyBook.Models;
+using BulkyBook.Model;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

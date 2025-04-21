@@ -1,5 +1,5 @@
 ﻿using BulkyBook.Data.DBContext;
-using BulkyBook.Models;
+using BulkyBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

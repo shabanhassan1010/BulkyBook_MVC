@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BulkyBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250420183518_AddImageUrl")]
-    partial class AddImageUrl
+    [Migration("20250420191701_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace BulkyBook.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BulkyBook.Models.Category", b =>
+            modelBuilder.Entity("BulkyBook.Model.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace BulkyBook.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BulkyBook.Models.Product", b =>
+            modelBuilder.Entity("BulkyBook.Model.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,9 +207,9 @@ namespace BulkyBook.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BulkyBook.Models.Product", b =>
+            modelBuilder.Entity("BulkyBook.Model.Product", b =>
                 {
-                    b.HasOne("BulkyBook.Models.Category", "Category")
+                    b.HasOne("BulkyBook.Model.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
