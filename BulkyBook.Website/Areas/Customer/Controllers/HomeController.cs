@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BulkyBook.Model;
+using BulkyBook.Data.UnitOfWork;
 
 namespace BulkyBook.Website.Areas.Customer.Controllers
 {
@@ -8,17 +9,24 @@ namespace BulkyBook.Website.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IUnitOfWork unitOfWork;
+        public HomeController(ILogger<HomeController> logger ,IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            this.unitOfWork = unitOfWork;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            var product = unitOfWork.Products.GetAllIncluding();
+            return View(product);
         }
-
+        [HttpGet]
+        public IActionResult Details(int productId)
+        {
+            var product = unitOfWork.Products.GetByIdIncluding(productId);
+            return View(product);
+        }
         public IActionResult Privacy()
         {
             return View();
