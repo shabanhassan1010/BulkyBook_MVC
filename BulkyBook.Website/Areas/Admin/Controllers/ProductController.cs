@@ -11,10 +11,12 @@ namespace BulkyBook.Website.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         #region DBContext
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUnitOfWork unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork , IWebHostEnvironment webHostEnvironment)
         {
             this.unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -22,12 +24,12 @@ namespace BulkyBook.Website.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var Products = unitOfWork.Products.GetAll();          
+            var Products = unitOfWork.Products.GetAllIncluding();          
             return View(Products);
         }
         #endregion
 
-        #region Create
+        #region Update & Create
         [HttpGet]
         public IActionResult Upsert(int id)
         {
@@ -55,131 +57,111 @@ namespace BulkyBook.Website.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product product, IFormFile file)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                // Handle image upload
-                if (file != null && file.Length > 0)
-                {
-                    // Validate file type
-                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                    var extension = Path.GetExtension(file.FileName).ToLower();
+                string wwwRoot = _webHostEnvironment.WebRootPath; // WebRootPath: give me the basic root folder
+                if(file != null)       // then must uplaod the file and save it in -> Images\product File
+                { 
+                    string FileName = Guid.NewGuid().ToString()  + Path.GetExtension(file.FileName);  // give me Random name for the file (Final Image)
+                    string ProductPath = Path.Combine(wwwRoot, @"Images\Products");  // give me the path inside product folder (Location)
 
-                    if (!allowedExtensions.Contains(extension))
+                    // delete The old Image
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
-                        ModelState.AddModelError("ImageUrl", "Only image files (jpg, jpeg, png) are allowed");
-                        return View(product);
+                        var OldImagePath = Path.Combine(wwwRoot,productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(OldImagePath))
+                        {
+                            System.IO.File.Delete(OldImagePath);
+                        }
                     }
 
-                    // Validate file size (2MB max)
-                    if (file.Length > 2 * 1024 * 1024)
+                    // Upload The Image
+                    using (var fileStream = new FileStream(Path.Combine(ProductPath, FileName), FileMode.Create))  // SAve Image
                     {
-                        ModelState.AddModelError("ImageUrl", "File size cannot exceed 2MB");
-                        return View(product);
+                        file.CopyTo(fileStream);  // copy the file in the new location that add it
                     }
 
-                    // Create upload directory if not exists
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
-                    if (!Directory.Exists(uploadPath))
-                    {
-                        Directory.CreateDirectory(uploadPath);
-                    }
-
-                    // Generate unique filename
-                    var fileName = $"{Guid.NewGuid()}{extension}";
-                    var filePath = Path.Combine(uploadPath, fileName);
-
-                    // Save file
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-
-                    // Store relative path
-                    product.ImageUrl = $"/images/products/{fileName}";
+                    // Update The Image Url
+                    productVM.Product.ImageUrl = @"\Images\Products\" + FileName;
                 }
-
-                unitOfWork.Products.Add(product);
-                unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // Repopulate categories if validation fails
-            ViewBag.Categories = unitOfWork.Categories.GetAll()
-                .Select(s => new SelectListItem
+                if(productVM.Product.Id == 0)
                 {
-                    Value = s.ID.ToString(),
-                    Text = s.Name
+                    unitOfWork.Products.Add(productVM.Product);
+                    TempData["success"] = "Product created successfully";
+                }
+                else
+                {
+                    unitOfWork.Products.Update(productVM.Product);
+                    TempData["success"] = "Product Updated successfully";
+                }
+                unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                productVM.CategoryList = unitOfWork.Categories.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.ID.ToString()
                 });
-
-            return View(product);
+                return View(productVM);
+            }
         }
         #endregion
 
-        #region Update
-        //[HttpGet]
-        //public IActionResult Update(int id)
-        //{
-        //    ViewBag.Categories = unitOfWork.Categories.GetAll()
-        //        .Select(s => new SelectListItem
-        //        {
-        //            Value = s.ID.ToString(),  // Use ID for value
-        //            Text = s.Name             // Use Name for display
-        //        });
-        //    if (id == null || id == 0)
-        //        return NotFound();
-        //    var Product = unitOfWork.Products.GetById(id);
-        //    if (Product == null)
-        //        return NotFound();
-        //    return View(Product);
-        //}
-        //[HttpPost]
-        //public IActionResult Update(int id, Product product)
-        //{
-        //    //if (product.Id != id || product is null)
-        //    //{
-        //    //    return BadRequest();
-        //    //}
-        //    //if (product.Title == product.Id.ToString())
-        //    //{
-        //    //    ModelState.AddModelError(nameof(product.Title), "The Display Order cannot exactly match the Name");
-        //    //}
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (product.Title == product.Id.ToString())
-        //        {
-        //            ModelState.AddModelError(nameof(product.Title), "The Display Order cannot exactly match the Name");
-        //        }
-        //        unitOfWork.Products.Update(product);
-        //        unitOfWork.Save();
-        //        TempData["success"] = "product updated successfully";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View();
-        //}
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Product> objProductList = unitOfWork.Products.GetAllIncluding().ToList();
+            return Json(new { data = objProductList });
+        }
         #endregion
 
         #region Delete
-        [HttpGet]
+        //[HttpDelete]
+        //public IActionResult Delete(int id)
+        //{
+        //    var DeleteProduct = unitOfWork.Products.GetById(id);
+        //    if (DeleteProduct == null)
+        //        return NotFound();
+        //    return View(DeleteProduct);
+        //}
+        //[HttpPost, ActionName("Delete")]
+        //public IActionResult ConfirmDelete(int id)
+        //{
+        //    var DeleteProduct = unitOfWork.Products.GetById(id);
+        //    if (DeleteProduct == null)
+        //        return NotFound();
+        //    unitOfWork.Products.Delete(DeleteProduct);
+        //    unitOfWork.Save();
+        //    TempData["success"] = "Category deleted successfully";
+        //    return RedirectToAction(nameof(Index));
+        //}
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var DeleteProduct = unitOfWork.Products.GetById(id);
-            if (DeleteProduct == null)
-                return NotFound();
-            return View(DeleteProduct);
-        }
-        [HttpPost, ActionName("Delete")]
-        public IActionResult ConfirmDelete(int id)
-        {
-            var DeleteProduct = unitOfWork.Products.GetById(id);
-            if (DeleteProduct == null)
-                return NotFound();
-            unitOfWork.Products.Delete(DeleteProduct);
+            var productToBeDeleted = unitOfWork.Products.GetById(id);
+            if (productToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,
+                               productToBeDeleted.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            unitOfWork.Products.Delete(productToBeDeleted);
             unitOfWork.Save();
-            TempData["success"] = "Category deleted successfully";
-            return RedirectToAction(nameof(Index));
+
+            return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion
     }
