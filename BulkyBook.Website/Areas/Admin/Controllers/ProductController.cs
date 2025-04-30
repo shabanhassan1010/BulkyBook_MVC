@@ -1,6 +1,8 @@
 ﻿using BulkyBook.Data.UnitOfWork;
 using BulkyBook.Model;
+using BulkyBook.Utility;
 using BulkyBook.Website.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace BulkyBook.Website.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(SD.Role_Admin)]
     public class ProductController : Controller
     {
         #region DBContext

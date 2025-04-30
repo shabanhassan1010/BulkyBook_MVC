@@ -1,9 +1,11 @@
 ﻿using BulkyBook.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBook.Data.DBContext
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base
             (options)
@@ -12,9 +14,12 @@ namespace BulkyBook.Data.DBContext
         }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { ID = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { ID = 2, Name = "Comedy", DisplayOrder = 2 },
@@ -107,7 +112,6 @@ namespace BulkyBook.Data.DBContext
                     ImageUrl = ""
                 }
                 );
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -1,40 +1,21 @@
 ﻿@model IEnumerable<Product>
 
-<div class="container-xxl px-4 py-5" style="max-width: 1800px;">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+<div class="container-xxl py-5">
+    <div class="row g-4">
         @foreach (var product in Model)
         {
-            <div class="col d-flex justify-content-center">
-                <div class="card h-100 border-0 shadow-hover overflow-hidden position-relative"
-                     style="transition: transform 0.3s, box-shadow 0.3s; width: 100%; max-width: 320px;">
-                    <div class="image-container" style="height: 240px; overflow: hidden;">
-                        <img src="@Url.Content(product.ImageUrl)"
-                             class="card-img-top h-100 w-100 object-fit-cover"
-                             alt="@product.Title" />
-                    </div>
-                    <div class="card-body d-flex flex-column p-4">
-                        <h5 class="card-title mb-2 fs-5 fw-bold text-dark text-truncate">
-                            @product.Title
-                        </h5>
-                        <p class="text-muted mb-2 small">
-                            by <span class="text-secondary fw-medium">@product.Author</span>
-                        </p>
-
-                        <div class="d-flex gap-2 justify-content-center align-items-baseline mb-3">
-                            <span class="text-decoration-line-through text-danger small">
-                                @product.ListPrice.ToString("c")
-                            </span>
-                            <span class="h5 text-success fw-bolder">
-                                @product.Price100.ToString("c")
-                            </span>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="@Url.Content(product.ImageUrl)" class="card-img-top" alt="@product.Title" style="height: 250px; object-fit: cover;" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-truncate">@product.Title</h5>
+                        <p class="text-muted small mb-2">by @product.Author</p>
+                        <div class="mb-3">
+                            <span class="text-muted text-decoration-line-through me-2">@product.ListPrice.ToString("c")</span>
+                            <span class="text-success fw-bold">@product.Price100.ToString("c")</span>
                         </div>
-
-                        <a asp-action="Details"
-                           asp-route-productId="@product.Id"
-                           class="btn btn-dark hover-scale mt-auto py-2 d-flex align-items-center justify-content-center gap-2"
-                           style="transition: all 0.3s;">
-                            <span>View Details</span>
-                            <i class="bi bi-arrow-right-short fs-5"></i>
+                        <a asp-action="Details" asp-route-productId="@product.Id" class="btn btn-outline-primary mt-auto w-100">
+                            View Details
                         </a>
                     </div>
                 </div>
@@ -42,33 +23,3 @@
         }
     </div>
 </div>
-
-<style>
-    .shadow-hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-radius: 12px !important;
-    }
-
-        .shadow-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-        }
-
-    .hover-scale:hover {
-        transform: scale(1.02);
-    }
-
-    .object-fit-cover {
-        object-fit: cover;
-        object-position: center;
-    }
-
-    .card {
-        border-radius: 12px !important;
-    }
-
-    .image-container {
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
-    }
-</style>
