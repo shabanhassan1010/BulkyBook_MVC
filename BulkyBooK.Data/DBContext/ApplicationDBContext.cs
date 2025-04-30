@@ -15,6 +15,7 @@ namespace BulkyBook.Data.DBContext
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<ShopingCart> ShopingCarts { get; set; }
 
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
