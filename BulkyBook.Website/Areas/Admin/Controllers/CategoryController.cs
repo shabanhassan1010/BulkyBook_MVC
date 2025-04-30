@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BulkyBook.Website.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(SD.Role_Admin)]
+    //[Authorize(SD.Role_Admin)]
     public class CategoryController : Controller
     {
         #region DBContext
