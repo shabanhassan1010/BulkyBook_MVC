@@ -14,9 +14,10 @@
                             <span class="text-muted text-decoration-line-through me-2">@product.ListPrice.ToString("c")</span>
                             <span class="text-success fw-bold">@product.Price100.ToString("c")</span>
                         </div>
-                        <a asp-action="Details" asp-route-productId="@product.Id" class="btn btn-outline-primary mt-auto w-100">
+                        <a  asp-action="Details" asp-route-Id="@product.Id" class="btn btn-outline-primary mt-auto w-100">
                             View Details
                         </a>
+
                     </div>
                 </div>
             </div>

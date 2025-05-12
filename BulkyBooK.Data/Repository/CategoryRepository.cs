@@ -10,8 +10,10 @@ namespace BulkyBook.Data.Repository
 {
     public class CategoryRepository : GenericRepository<Category>
     {
+        private readonly ApplicationDBContext context;
         public CategoryRepository(ApplicationDBContext context) : base(context)
         {
+            this.context = context;
         }
     }
 }

@@ -1,46 +1,54 @@
-﻿@model Product
+﻿@model ShopingCart
 
-<form method="post">
+<form method="post" asp-area="Customer" asp-controller="Home" asp-action="Details">
+    <input hidden asp-for="ProductId" />
     <div class="container py-5 border-0 shadow-lg">
         <div class="row g-5">
             <div class="col-lg-5 text-center">
-                <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Title" style="height: 400px; object-fit: cover;" />
+                <img src="@Model.Product.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Product.Title" style="height: 400px; object-fit: cover;" />
             </div>
             <div class="col-lg-7">
-                <h2 class="fw-bold">@Model.Title</h2>
-                <p class="text-muted">by @Model.Author</p>
+                <h2 class="fw-bold">@Model.Product.Title</h2>
+                <p class="text-muted">by @Model.Product.Author</p>
 
                 <div class="my-4">
-                    <span class="text-muted text-decoration-line-through me-2">@Model.ListPrice.ToString("c")</span>
-                    <span class="text-success fs-4 fw-bold">@Model.Price100.ToString("c")</span>
-                    <div class="small text-danger mt-1">Save @((Model.ListPrice - Model.Price100).ToString("c"))</div>
+                    <span class="text-muted text-decoration-line-through me-2">@Model.Product.ListPrice.ToString("c")</span>
+                    <span class="text-success fs-4 fw-bold">@Model.Product.Price100.ToString("c")</span>
+                    <div class="small text-danger mt-1">Save @((Model.Product.ListPrice - Model.Product.Price100).ToString("c"))</div>
                 </div>
 
                 <div class="my-4">
                     <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-primary">@Model.Category.Name</span>
-                        <small class="ms-3 text-muted">ISBN: @Model.ISBN</small>
+                        <span class="badge bg-primary">@Model.Product?.Category?.Name</span>
+                        <small class="ms-3 text-muted">ISBN: @Model.Product?.ISBN</small>
                     </div>
 
-@*                     <div class="d-flex gap-3">
-                        <div>1-50: <strong>@Model.Price.ToString("c")</strong></div>
-                        <div>51-100: <strong>@Model.Price50.ToString("c")</strong></div>
-                        <div>100+: <strong>@Model.Price100.ToString("c")</strong></div>
-                    </div> *@
+                    <div class="d-flex gap-3">
+                        <div>1-50: <strong>@Model.Product.Price.ToString("c")</strong></div>
+                        <div>51-100: <strong>@Model.Product.Price50.ToString("c")</strong></div>
+                        <div>100+: <strong>@Model.Product.Price100.ToString("c")</strong></div>
+                    </div>
                 </div>
 
-                <div class="input-group mb-3" style="max-width: 200px;">
-                    <span class="input-group-text">Qty</span>
-                    <input type="number" value="1" min="1" class="form-control" />
+                <div class="row pl-2 mb-3">
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white border-0 fw-semibold" id="inputGroup-sizing-default">
+                                Count
+                            </span>
+                            <input asp-for="Count" type="number" value="1" class="form-control text-end"
+                                   aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" disabled class="btn btn-primary w-100 disabled">
-                    <i class="bi bi-cart-plus me-2"></i> Add to Cart (Coming Soon)
+                <button type="submit"  class="btn btn-primary w-100">
+                    <i class="bi bi-cart-plus me-2"></i> Add to Cart 
                 </button>
 
                 <div class="mt-5">
                     <h5>Description</h5>
-                    <p class="text-muted">@Html.Raw(Model.Description)</p>
+                    <p class="text-muted">@Html.Raw(Model.Product.Description)</p>
                 </div>
 
                 <a asp-action="Index" class="btn btn-link mt-3">← Back to Products</a>

@@ -1,4 +1,7 @@
 ﻿
+using BulkyBook.Model;
+using System.Linq.Expressions;
+
 namespace BulkyBook.Data.IRepository
 {
     public interface IRepository<T> where T : class

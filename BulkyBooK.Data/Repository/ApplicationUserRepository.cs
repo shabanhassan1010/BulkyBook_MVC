@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace BulkyBook.Data.Repository
 {
-    public class CompanyRepository : GenericRepository<Company>
+    public class ApplicationUserRepository : GenericRepository<ApplicationUser>
     {
-        private readonly ApplicationDBContext context;
-        public CompanyRepository(ApplicationDBContext context) : base(context)
+        public ApplicationUserRepository(ApplicationDBContext context) : base(context)
         {
-            this.context = context;
+            
         }
     }
 }

@@ -147,6 +147,12 @@ namespace BulkyBook.Data.DBContext
                     PhoneNumber = "7779990000" 
                 }
             );
+            modelBuilder.Entity<ShopingCart>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                      .UseIdentityColumn(); // Ensure identity configuration
+            });
         }
     }
 }

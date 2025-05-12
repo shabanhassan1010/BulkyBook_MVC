@@ -12,6 +12,8 @@ namespace BulkyBook.Data.UnitOfWork
         CategoryRepository Categories { get; }
         CompanyRepository Companies { get; }
         ProductRepository Products { get; }
+        ShoppingCartRepository shoppingCartRepository { get; }
+        ApplicationUserRepository applicationUserRepository { get; }
         void Save();
     }
 }
