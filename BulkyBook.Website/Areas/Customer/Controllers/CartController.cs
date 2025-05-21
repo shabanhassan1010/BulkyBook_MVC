@@ -17,7 +17,7 @@ namespace BulkyBook.Website.Areas.Customer.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Cart()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -32,6 +32,39 @@ namespace BulkyBook.Website.Areas.Customer.Controllers
             }
             return View(ShoppingCartVM);
         }
+        public IActionResult Plus(int cartId)
+        {
+            var cartFromDb = unitOfWork.shoppingCartRepository.GetById(cartId);
+            cartFromDb.Count += 1;
+            unitOfWork.shoppingCartRepository.Update(cartFromDb);
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Cart));
+        }
+        public IActionResult Minus(int cartId)
+        {
+            var cartFromDb = unitOfWork.shoppingCartRepository.GetById(cartId);
+
+            if (cartFromDb.Count <= 1)
+            {
+                //remove that from cart
+                unitOfWork.shoppingCartRepository.Delete(cartFromDb);
+            }
+            else
+            {
+                cartFromDb.Count -= 1;
+                unitOfWork.shoppingCartRepository.Update(cartFromDb);
+            }
+
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Cart));
+        }
+        public IActionResult Remove(int cartId)
+        {
+            var cartFromDb = unitOfWork.shoppingCartRepository.GetById(cartId);
+            unitOfWork.shoppingCartRepository.Delete(cartFromDb);
+            unitOfWork.Save();
+            return RedirectToAction(nameof(Cart));
+        }
         private double GetPriceBasedInQuntity(ShopingCart shopingCart)
         {
             if (shopingCart.Count <= 50)
@@ -44,6 +77,10 @@ namespace BulkyBook.Website.Areas.Customer.Controllers
                     return shopingCart.Product.Price100;
             }
 
+        }
+        public IActionResult Summary()
+        {
+            return View();
         }
     }
 }
