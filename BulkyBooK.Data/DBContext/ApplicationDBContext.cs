@@ -16,7 +16,8 @@ namespace BulkyBook.Data.DBContext
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<ShopingCart> ShopingCarts { get; set; }
-
+        public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
